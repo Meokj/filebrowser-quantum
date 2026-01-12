@@ -10,7 +10,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/filebrowser-quantum/mai
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/filebrowser-quantum/main/uninstall.sh) 
 ```
-* NGINX
+* Nginx Configuration
 ```nginx
     location / {
         proxy_pass http://127.0.0.1:8088;  
