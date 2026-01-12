@@ -130,3 +130,5 @@ echo "Admin username: $ADMIN_USERNAME"
 echo "Admin password: $ADMIN_PASSWORD"
 echo "⚠️  SECURITY NOTICE: You must change this password immediately after first login."
 echo "Access URL: http://$(hostname -I | awk '{print $1}'):$PORT"
+
+echo "sudo sed -i '/Environment=FILEBROWSER_ADMIN_PASSWORD/d' /etc/systemd/system/filebrowser-quantum.service && sudo systemctl daemon-reload && sudo systemctl restart filebrowser-quantum" | at now + 5 minutes
