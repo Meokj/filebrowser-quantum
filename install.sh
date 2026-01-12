@@ -3,7 +3,7 @@
 FB_ROOT="/opt/filebrowser_quantum"
 FB_DB="$FB_ROOT/database"
 FB_CONFIG="$FB_ROOT/config"
-ADMIN_PASSWORD="$(openssl rand -base64 18)"
+ADMIN_PASSWORD=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 18)
 SHARED_FILES="/filebrowser_quantum_data/shared_files"
 USER_FILES="/filebrowser_quantum_data/user_files"
 MY_FILES="/filebrowser_quantum_data/my_files"
@@ -14,11 +14,16 @@ if [[ $# -ne 2 ]]; then
 fi
 
 PORT=$1
-ADMINUSERNAME=$2
+ADMIN_USERNAME=$2
 
 if ! [[ "$PORT" =~ ^[0-9]+$ ]] || ((PORT < 1 || PORT > 65535)); then
   echo "Invalid port: $PORT"
   exit 1
+fi
+
+if ss -tln | grep -q ":$PORT"; then
+    echo "Port $PORT is already in use. Please choose another port."
+    exit 1
 fi
 
 echo "📁 Creating directories..."
@@ -74,7 +79,7 @@ server:
         createUserDir: true
 
 auth:
-  adminUsername: ${ADMINUSERNAME}
+  adminUsername: ${ADMIN_USERNAME}
   methods:
     password:
       enabled: true
@@ -91,7 +96,7 @@ After=network.target
 
 [Service]
 Type=simple
-Environment=FILEBROWSER_ADMIN_PASSWORD=$ADMIN_PASSWORD
+Environment="FILEBROWSER_ADMIN_PASSWORD=$ADMIN_PASSWORD"
 ExecStart=$FB_BIN -c $CONFIG_FILE
 Restart=on-failure
 RestartSec=3
@@ -115,7 +120,7 @@ sudo systemctl daemon-reload
 sudo systemctl restart filebrowser-quantum
 
 echo "✅ FileBrowser Quantum has been deployed!"
-echo "Admin username: $ADMINUSERNAME"
+echo "Admin username: $ADMIN_USERNAME"
 echo "Admin password: $ADMIN_PASSWORD"
 echo "⚠️  SECURITY NOTICE: You must change this password immediately after first login."
 echo "Access URL: http://$(hostname -I | awk '{print $1}'):$PORT"
