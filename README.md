@@ -2,7 +2,7 @@
 
 <hr>
 
-> **⚠️ TIP:** The **modified password** will take effect **5 minutes after installation**.  
+> **⚠️ TIP:** The **modified password** will take effect **5 minutes after the script installation is completed**.  
 > Change it **within 5 minutes**, or **reinstall the script**.
 
 * Installation
