@@ -11,8 +11,8 @@ if [ -f "$SERVICE_FILE" ]; then
     sudo systemctl daemon-reload
 fi
 
-FB_ROOT="/opt/filebrowser"
-DATA_DIR="/data"
+FB_ROOT="/opt/filebrowser_quantum"
+DATA_DIR="/filebrowser_quantum_data"
 
 echo "Removing FileBrowser files..."
 sudo rm -rf "$FB_ROOT"
