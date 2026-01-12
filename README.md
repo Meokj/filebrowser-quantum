@@ -2,6 +2,9 @@
 
 <hr>
 
+**TIP:** The new password will take effect **5 minutes after the script is installed**.  
+Please change the password **within 5 minutes**, or you will need to uninstall and reinstall the script.
+
 * Installation
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/filebrowser-quantum/main/install.sh) 8088 adminusername
