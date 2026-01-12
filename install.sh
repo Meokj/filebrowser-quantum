@@ -128,23 +128,23 @@ sudo systemctl restart filebrowser-quantum
 echo "✅ FileBrowser Quantum has been deployed!"
 echo "Admin username: $ADMIN_USERNAME"
 echo "Admin password: $ADMIN_PASSWORD"
-echo "⚠️  SECURITY NOTICE: You must change this password immediately after first login."
+echo "⚠️  SECURITY NOTICE: You must change this password immediately after first login (within 5 minutes)."
 echo "Access URL: http://$(hostname -I | awk '{print $1}'):$PORT"
 
 if ! command -v at &>/dev/null; then
     echo "⏳ 'at' not found. Installing..."
     
     if [[ -f /etc/debian_version ]]; then
-        sudo apt update
-        sudo apt install -y at
+        sudo apt update -qq >/dev/null 2>&1
+        sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq at >/dev/null 2>&1
     elif [[ -f /etc/redhat-release ]]; then
-        sudo yum install -y at
+        sudo yum install -y -q at >/dev/null 2>&1
     else
         echo "❌ Unsupported Linux distribution. Please install 'at' manually."
         exit 1
     fi
 fi
 
-sudo systemctl enable --now atd
+sudo systemctl enable --now atd >/dev/null 2>&1
 
 echo "sudo sed -i '/Environment=FILEBROWSER_ADMIN_PASSWORD/d' /etc/systemd/system/filebrowser-quantum.service && sudo systemctl daemon-reload && sudo systemctl restart filebrowser-quantum" | at now + 5 minutes
