@@ -13,13 +13,12 @@ bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/filebrowser-quantum/mai
 * NGINX
 ```nginx
     location / {
-        proxy_pass http://127.0.0.1:8088;  # FileBrowser Quantum 端口
+        proxy_pass http://127.0.0.1:8088;  
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # WebSocket 支持（FileBrowser UI 可能需要）
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
