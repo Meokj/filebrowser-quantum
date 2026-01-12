@@ -26,6 +26,12 @@ if ss -tln | grep -q ":$PORT"; then
     exit 1
 fi
 
+if [[ -d "$FB_ROOT" || -f "$SERVICE_FILE" ]]; then
+    echo "⚠️  FileBrowser Quantum appears to be already installed."
+    echo "Please uninstall it first before running this script."
+    exit 1
+fi
+
 echo "📁 Creating directories..."
 for dir in "$FB_ROOT" "$FB_DB" "$FB_CONFIG" "$SHARED_FILES" "$USER_FILES" "$MY_FILES"; do
   [[ -d "$dir" ]] || sudo mkdir -p "$dir"
