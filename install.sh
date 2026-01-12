@@ -28,7 +28,7 @@ sudo chmod -R 755 "$FB_CONFIG"
 sudo chown -R $(whoami):$(whoami) "$DATA_DIR"
 sudo chmod -R 777 "$DATA_DIR"   
 
-FB_URL="https://github.com/quantumx-apps/filebrowser-quantum/releases/latest/download/filebrowser-linux-amd64"
+FB_URL="https://github.com/quantumx-apps/filebrowser-quantum/releases/latest/download/linux-amd64-filebrowser"
 FB_BIN="$FB_ROOT/filebrowser-quantum"
 
 if [ ! -f "$FB_BIN" ]; then
