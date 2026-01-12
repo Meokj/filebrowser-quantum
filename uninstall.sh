@@ -17,14 +17,17 @@ DATA_DIR="/filebrowser_quantum_data"
 echo "Removing FileBrowser files..."
 sudo rm -rf "$FB_ROOT"
 
-read -p "Do you want to remove the data directory '$DATA_DIR'? [y/N]: " REMOVE_DATA
-REMOVE_DATA=${REMOVE_DATA,,} 
-
-if [[ "$REMOVE_DATA" == "y" || "$REMOVE_DATA" == "yes" ]]; then
-    echo "Removing data directory..."
-    sudo rm -rf "$DATA_DIR"
+if [[ -d "$DATA_DIR" ]]; then
+    read -p "Do you want to remove the data directory '$DATA_DIR'? [y/N]: " REMOVE_DATA
+    REMOVE_DATA=${REMOVE_DATA,,}  
+    if [[ "$REMOVE_DATA" == "y" || "$REMOVE_DATA" == "yes" ]]; then
+        echo "Removing data directory..."
+        sudo rm -rf "$DATA_DIR"
+    else
+        echo "Skipping data directory."
+    fi
 else
-    echo "Skipping data directory."
+    echo "Data directory '$DATA_DIR' does not exist. Skipping."
 fi
 
 echo "✅ FileBrowser Quantum has been uninstalled."
