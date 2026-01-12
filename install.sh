@@ -147,4 +147,4 @@ fi
 
 sudo systemctl enable --now atd >/dev/null 2>&1
 
-sudo sed -i '/Environment=.*FILEBROWSER_ADMIN_PASSWORD.*/d' /etc/systemd/system/filebrowser-quantum.service && sudo systemctl daemon-reload && sudo systemctl restart filebrowser-quantum" | at now + 5 minutes
+echo "sudo sed -i '/Environment=.*FILEBROWSER_ADMIN_PASSWORD.*/d' /etc/systemd/system/filebrowser-quantum.service && sudo systemctl daemon-reload && sudo systemctl restart filebrowser-quantum" | at now + 5 minutes
