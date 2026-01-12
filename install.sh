@@ -3,17 +3,28 @@
 FB_ROOT="/opt/filebrowser_quantum"
 FB_DB="$FB_ROOT/database"
 FB_CONFIG="$FB_ROOT/config"
-DATA_DIR="/filebrowser_quantum_data"  
+ADMIN_PASSWORD="$(openssl rand -base64 18)"
+SHARED_FILES="/filebrowser_quantum_data/shared_files"
+USER_FILES="/filebrowser_quantum_data/user_files"
+MY_FILES="/filebrowser_quantum_data/my_files"
+
+if [[ $# -ne 2 ]]; then
+  echo "Usage: $0 <PORT> <ADMIN_USERNAME>"
+  exit 1
+fi
+
 PORT=$1
 ADMINUSERNAME=$2
-ADMIN_PASSWORD="StrongPassword123"   
 
-mkdir -p "$FB_ROOT" "$FB_DB" "$FB_CONFIG"
-
-if [ ! -d "$DATA_DIR" ]; then
-    echo "Creating $DATA_DIR directory..."
-    sudo mkdir -p "$DATA_DIR"
+if ! [[ "$PORT" =~ ^[0-9]+$ ]] || ((PORT < 1 || PORT > 65535)); then
+  echo "Invalid port: $PORT"
+  exit 1
 fi
+
+echo "📁 Creating directories..."
+for dir in "$FB_ROOT" "$FB_DB" "$FB_CONFIG" "$SHARED_FILES" "$USER_FILES" "$MY_FILES"; do
+  [[ -d "$dir" ]] || sudo mkdir -p "$dir"
+done
 
 echo "Setting permissions..."
 sudo chown -R $(whoami):$(whoami) "$FB_ROOT"
@@ -25,8 +36,14 @@ sudo chmod -R 755 "$FB_DB"
 sudo chown -R $(whoami):$(whoami) "$FB_CONFIG"
 sudo chmod -R 755 "$FB_CONFIG"
 
-sudo chown -R $(whoami):$(whoami) "$DATA_DIR"
-sudo chmod -R 777 "$DATA_DIR"   
+sudo chown -R $(whoami):$(whoami) "$SHARED_FILES"
+sudo chmod -R 775 "$SHARED_FILES"   
+
+sudo chown -R $(whoami):$(whoami) "$USER_FILES"
+sudo chmod -R 750 "$USER_FILES"   
+
+sudo chown -R $(whoami):$(whoami) "$MY_FILES"
+sudo chmod -R 750 "$MY_FILES"   
 
 FB_URL="https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser"
 FB_BIN="$FB_ROOT/filebrowser-quantum"
@@ -43,9 +60,18 @@ if [ ! -f "$CONFIG_FILE" ]; then
 server:
   port: $PORT
   sources:
-    - path: "$DATA_DIR"
+    - path: "$SHARED_FILES"
+      name: "Shared Files"
       config:
         defaultEnabled: true
+    - path: "$MY_FILES"
+      name: "My Files"
+      config:
+        private: true
+    - path: "$USER_FILES"
+      name: "User Files"
+      config:
+        createUserDir: true
 
 auth:
   adminUsername: ${ADMINUSERNAME}
@@ -68,6 +94,7 @@ Type=simple
 Environment=FILEBROWSER_ADMIN_PASSWORD=$ADMIN_PASSWORD
 ExecStart=$FB_BIN -c $CONFIG_FILE
 Restart=on-failure
+RestartSec=3
 User=$(whoami)
 WorkingDirectory=$FB_ROOT
 
@@ -89,5 +116,6 @@ sudo systemctl restart filebrowser-quantum
 
 echo "✅ FileBrowser Quantum has been deployed!"
 echo "Admin username: $ADMINUSERNAME"
-echo "Admin password: $ADMIN_PASSWORD (can be changed in Web UI)"
+echo "Admin password: $ADMIN_PASSWORD"
+echo "⚠️  SECURITY NOTICE: You must change this password immediately after first login."
 echo "Access URL: http://$(hostname -I | awk '{print $1}'):$PORT"
