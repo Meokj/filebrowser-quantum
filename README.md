@@ -8,7 +8,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/filebrowser-quantum/mai
 ```
 * Uninstallation
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/filebrowser-quantum/main/uninstall.sh) 
+bash <(curl -Ls https://raw.githubusercontent.com/Meokj/filebrowser-quantum/main/uninstall.sh) 
 ```
 * Nginx Configuration
 ```nginx
